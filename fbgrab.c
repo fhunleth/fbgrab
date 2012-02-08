@@ -151,7 +151,7 @@ static void convert1555to32(int width, int height,
 	/* RED   = 2 */
 	outbuffer[(i<<1)+2] = (inbuffer[i] & 0x1f) << 3;
 	/* ALPHA = 3 */
-	outbuffer[(i<<1)+3] = '\0'; 
+	outbuffer[(i<<1)+3] = (inbuffer[i] & 0x80) ? 0xff : 0; 
     }
 }
 
@@ -171,7 +171,7 @@ static void convert565to32(int width, int height,
         /* RED   = 2 */
 	outbuffer[(i<<1)+2] = (inbuffer[i+1] & 0xF8);
 	/* ALPHA = 3 */
-	outbuffer[(i<<1)+3] = '\0'; 
+	outbuffer[(i<<1)+3] = 255; 
     }
 }
 
@@ -190,7 +190,7 @@ static void convert888to32(int width, int height,
 	/* RED   = 2 */
         outbuffer[(i<<2)+2] = inbuffer[i*3+2];
 	/* ALPHA */
-        outbuffer[(i<<2)+3] = '\0';
+        outbuffer[(i<<2)+3] = 255;
     }
 }
 
@@ -232,7 +232,6 @@ static void write_PNG(unsigned char *outbuffer, char *filename,
     
     bit_depth = 8;
     color_type = PNG_COLOR_TYPE_RGB_ALPHA;
-    png_set_invert_alpha(png_ptr);
     png_set_bgr(png_ptr);
 
     png_set_IHDR(png_ptr, info_ptr, width, height, 
